@@ -28,30 +28,11 @@ run;
 
 data BRFSS2023;
 	set BRFSS2023;
-		if HIVTST7 = 1 then binTestedHIV = 1; /* ever been tested for HIV */
-		if HIVTST7 = 2 then binTestedHIV = 0; /* never been testsed for HIV */
-		if HIVTST7 = 7 then binTestedHIV = .; /* missing data/don't know/refused */
-		if HIVTST7 = 9 then binTestedHIV = .;
-		if HIVTST7 = . then binTestedHIV = .;
-run;
-
-data BRFSS2023;
-	set BRFSS2023;
 		if testedHIV = "Missing" then delete;
-run;
-
-data BRFSS2023;
-	set BRFSS2023;
-		if binTestedHIV = . then delete;
 run;
 
 proc freq data = BRFSS2023;
 	table testedHIV;
-		title "Ever Tested for HIV";
-run;
-
-proc freq data = BRFSS2023;
-	table binTestedHIV;
 		title "Ever Tested for HIV";
 run;
 
@@ -79,4 +60,42 @@ proc freq data = BRFSS2023;
 	table married;
 		title "Martital Status";
 run;
+
+/* var = SEXVAR (sex of respondent) */
+
+data BRFSS2023;
+	set BRFSS2023;
+	if SEXVAR = 1 then sex = "Male";
+	if SEXVAR = 2 then sex = "Female";
+run;
+
+proc freq data = BRFSS2023;
+	table sex;
+		title "Sex of Respondent";
+run;
+
+/* var = GENHLTH (perception of general health) */
+
+data BRFSS2023;
+	set BRFSS2023;
+		if GENHLTH = 1 then healthPerception = "Good";
+		if GENHLTH = 2 then healthPerception = "Good";
+		if GENHLTH = 3 then healthPerception = "Good";
+		if GENHLTH = 4 then healthPerception = "Fair or Poor";
+		if GENHLTH = 5 then healthPerception = "Fair or Poor";
+		if GENHLTH = 7 then healthPerception = 9999;
+		if GENHLTH = 9 then healthPerception = 9999;
+run;
+
+data BRFSS2023;
+	set BRFSS2023;
+		if healthPerception = 9999 then delete;
+run;
+
+proc freq data = BRFSS2023;
+	table healthPerception;
+		title "Perception of Health";
+run;
+
+
 
