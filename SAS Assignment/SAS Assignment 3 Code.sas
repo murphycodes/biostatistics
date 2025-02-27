@@ -85,6 +85,7 @@ data BRFSS2023;
 		if GENHLTH = 5 then healthPerception = "Fair or Poor";
 		if GENHLTH = 7 then healthPerception = 9999;
 		if GENHLTH = 9 then healthPerception = 9999;
+		if GENHLTH = . then healthPerception = 9999;
 run;
 
 data BRFSS2023;
@@ -95,6 +96,32 @@ run;
 proc freq data = BRFSS2023;
 	table healthPerception;
 		title "Perception of Health";
+run;
+
+/* var = EMPLOY1 (employment status) */
+
+data BRFSS2023;
+	set BRFSS2023;
+		if EMPLOY1 = 1 then employment = "Yes";
+		if EMPLOY1 = 2 then employment = "Yes";
+		if EMPLOY1 = 3 then employment = "No";
+		if EMPLOY1 = 4 then employment = "No";
+		if EMPLOY1 = 5 then employment = "Retired or Non-Workforce";
+		if EMPLOY1 = 6 then employment = "Retired or Non-Workforce";
+		if EMPLOY1 = 7 then employment = "Retired or Non-Workforce";
+		if EMPLOY1 = 8 then employment = "Retired or Non-Workforce";
+		if EMPLOY1 = 9 then employment = 9999;
+		if EMPLOY1 = . then employment = 9999;
+run;
+
+data BRFSS2023;
+	set BRFSS2023;
+		if employment = 9999 then delete;
+run;
+
+proc freq data = BRFSS2023;
+	table employment;
+		title "Employment Status";
 run;
 
 
