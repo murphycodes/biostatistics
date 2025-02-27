@@ -9,8 +9,7 @@ libname xptfile xport 'G:\My Drive\Spring 2025\Biostatistics II\Datasets\BRFSS\L
 proc copy inlib=xptfile outlib=work;
 run;
 
-data BRFSS2023;
-set LLCP2023;
+data BRFSS2023; set LLCP2023;
 run;
 
 /* Variables */
@@ -102,21 +101,21 @@ run;
 
 data BRFSS2023;
 	set BRFSS2023;
-		if EMPLOY1 = 1 then employment = "Yes";
-		if EMPLOY1 = 2 then employment = "Yes";
-		if EMPLOY1 = 3 then employment = "No";
-		if EMPLOY1 = 4 then employment = "No";
-		if EMPLOY1 = 5 then employment = "Retired or Non-Workforce";
-		if EMPLOY1 = 6 then employment = "Retired or Non-Workforce";
-		if EMPLOY1 = 7 then employment = "Retired or Non-Workforce";
-		if EMPLOY1 = 8 then employment = "Retired or Non-Workforce";
-		if EMPLOY1 = 9 then employment = 9999;
-		if EMPLOY1 = . then employment = 9999;
+		if EMPLOY1 = 1 then employment = 1;
+		if EMPLOY1 = 2 then employment = 1;
+		if EMPLOY1 = 3 then employment = 0;
+		if EMPLOY1 = 4 then employment = 0;
+		if EMPLOY1 = 5 then employment = 2;
+		if EMPLOY1 = 6 then employment = 2;
+		if EMPLOY1 = 7 then employment = 2;
+		if EMPLOY1 = 8 then employment = 2;
+		if EMPLOY1 = 9 then employment = .;
+		if EMPLOY1 = . then employment = .;
 run;
 
 data BRFSS2023;
 	set BRFSS2023;
-		if employment = 9999 then delete;
+		if employment = . then delete;
 run;
 
 proc freq data = BRFSS2023;
