@@ -68,7 +68,7 @@ run;
 /* var = MENTHLTH (bad mental health days) */
 
 data BRFSS2023; set BRFSS2023;
-	if MENTHLTH = 88 then mentalHealth = 0; /* great mental health */
+	if MENTHLTH = 88 then mentalHealth = 0; /* good mental health */
 	if MENTHLTH in (1:14) then mentalHealth = 1; /* fair mental health */
 	if MENTHLTH in (15:30) then mentalHealth = 2; /* bad mental health */
 	if MENTHLTH = 77 then mentalHealth = .;
@@ -84,7 +84,7 @@ run;
 
 data BRFSS2023; set BRFSS2023;
 	if SMOKE100 = 2 then everSmoked = 0; /* never smoked */
-	if SMOKE100 = 1 then everSmoked = 1; /* smoked five packs in lifetime */
+	if SMOKE100 = 1 then everSmoked = 1; /* smoked five packs or more in lifetime */
 	if SMOKE100 in (3:9) then everSmoked = .; /* don't know/refused */
 	if SMOKE100 = . then everSmoked = .; /* missing data */
 run;
@@ -102,6 +102,8 @@ data BRFSS2023; set BRFSS2023;
 	if AVEDRNK3 < 3 and male = 0 then alcoholAbuse = 0; /* not a heavy user of alcohol, male (as defined by NIAAA) */
 run;
 
+*Heavy alcohol use, according to the National Institute on Alcohol Abuse and Alcoholism (NIAAA), is defined as consuming 5 or more drinks on any day for men, or 4 or more drinks on any day for women, or 15 or more drinks per week for men, and 8 or more drinks per week for women. *;
+
 proc freq data = BRFSS2023;
 	table alcoholAbuse; title "Drank Excessively";
 run;
@@ -110,8 +112,15 @@ proc surveyfreq data = BRFSS2023 varmethod = TAYLOR;
 	strata _STSTR;
 	cluster _PSU;
 	weight _LLCPWT;
-	table male race mentalHealth everSmoked alcoholAbuse /cl;
+	table male race mentalHealth alcoholAbuse everSmoked testedHIV /cl;
 run;
 
 /* Creating Cross Table */
 
+proc freq data = BRFSS2023;
+	table male * testedHIV / nocol; title "Sex";
+	table race * testedHIV / nocol; title "Race";
+	table mentalHealth * testedHIV / nocol; title "Mental Health Status";
+	table alcoholAbuse * testedHIV / nocol; title "Heavy Alcohol Use";
+	table everSmoked * testedHIV / nocol; title "Tobacoo Usage";
+run;
