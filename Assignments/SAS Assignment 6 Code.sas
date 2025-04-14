@@ -16,9 +16,18 @@ run;
 
 /* Q1 */
 
-proc surveyfreq data = combinedData;
-	cluster _PSU;
-	strata _STSTR;
-	weight _WEIGHT;
-	table survey * c_smoking / chisq cl row;
+proc freq data = combinedData;
+	table survey * c_smoking / chisq;
+run;
+
+/* Q2 */
+
+proc surveylogistic data = combinedData nomcar varmethod = TAYLOR; 
+	class male (ref = "0") race_eth (ref = "0") dep (ref = "0") child_house (ref = "0") survey (ref = "0");
+	model c_smoking (event = "1") = male race_eth dep child_house survey;
+run;
+
+proc surveylogistic data = combinedData nomcar varmethod = TAYLOR; 
+	class male (ref = "0") race_eth (ref = "0") dep (ref = "0") child_house (ref = "0") survey (ref = "1");
+	model c_smoking (event = "1") = male race_eth dep child_house survey;
 run;
